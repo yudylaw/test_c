@@ -5,7 +5,32 @@
 // 计算数组长度的宏
 #define ARRAY_LEN(array,len) {len = (sizeof(array) / sizeof(array[0]));}
 
-#define MAX 100
+//括号不可少
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+
+//外部函数与变量
+//不推荐这样的用法
+extern void hello();
+extern count;
+
+struct Person {
+	int age;
+	char *name;
+};
+
+//公式1:前面的地址必须是后面的地址正数倍,不是就补齐
+//公式2:整个Struct的地址必须是最大字节的整数倍
+struct Padding {
+	char b;//1byte, 地址1
+	char c;//1byte，地址2 + 2 padding
+	int a;//4byte，地址8
+};
+
+struct Margin {
+	short c;//1+7
+	long a;//8
+	char *d;//8
+};
 
 u_char *
 my_strlchr(u_char *p, u_char *last, u_char c)
@@ -45,7 +70,46 @@ void test(char* out) {
 	free(str);
 }
 
+int sum() {
+	static int sum = 0;//该静态变量只在函数内有效
+	sum++;
+	return sum;
+}
+
 int main() {
+
+	sum();
+	sum();
+	int d = sum();
+
+	printf("sum=%d\n", d);
+
+	hello();
+
+	printf("count=%d\n", count);
+
+	int a = 20;
+	int b = 20;
+
+	int max = MAX(a+5, b - 5);
+
+	printf("max=%d\n", max);
+
+	struct Person person = {30, "Yudy"};
+
+	printf("%s\n", person.name);
+
+	struct Padding pad = {10, 'c', 'b'};
+
+	struct Margin margin = {'a', 10};
+
+	printf("size of Padding=%d\n", sizeof(pad));
+	printf("size of Margin=%d\n", sizeof(margin));
+
+	return 0;
+}
+
+int main3() {
 
 //	unsigned int n = 10;
 //	unsigned int m = 20;
