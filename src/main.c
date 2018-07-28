@@ -18,6 +18,18 @@ struct Person {
 	char *name;
 };
 
+//默认4byte对齐
+struct ngx_event_s {
+    unsigned flag:1;//指定占结构体的bit位数
+    unsigned state:1;
+    unsigned active:1;
+    unsigned day:16;//padding 13bit before day field
+    unsigned age:16;
+    unsigned num:16;
+    unsigned add:16;
+};
+//byte=8bit
+
 //公式1:前面的地址必须是后面的地址正数倍,不是就补齐
 //公式2:整个Struct的地址必须是最大字节的整数倍
 struct Padding {
@@ -31,21 +43,6 @@ struct Margin {
 	long a;//8
 	char *d;//8
 };
-
-u_char *
-my_strlchr(u_char *p, u_char *last, u_char c)
-{
-    while (p < last) {
-
-        if (*p == c) {
-            return p;
-        }
-
-        p++;
-    }
-
-    return NULL;
-}
 
 void test(char* out) {
 	char* str = (char*) malloc(3);
@@ -76,7 +73,7 @@ int sum() {
 	return sum;
 }
 
-int main() {
+int main4() {
 
 	sum();
 	sum();
@@ -218,4 +215,11 @@ int main2(int argc, char *args[])
 	return 0;
 }
 
+int main(int argc, char *args[])
+{
+    struct ngx_event_s event = {1, 2, 3};
+    printf("%d\n", sizeof(event));
+    printf("%d\n", sizeof(struct ngx_event_s));
+    return 0;
+}
 
